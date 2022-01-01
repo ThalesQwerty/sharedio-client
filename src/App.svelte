@@ -3,17 +3,28 @@
 
 	let ws:WebSocket;
 
+	let token:string|null = null;
+
 	function connect() {
 		ws = new WebSocket("ws://localhost:8080");
 
 		ws.onopen = () => {
 			console.log("Connection open");
 			connected = true;
+
+			ws.send(JSON.stringify({
+				action: "auth",
+				token
+			}));
 		}
 
 		ws.onclose = () => {
 			console.log("Connection lost");
 			connected = false;
+		}
+
+		ws.onmessage = ({ data }) => {
+			token = JSON.parse(data).token || null;
 		}
 	}
 
