@@ -1,45 +1,24 @@
 <script lang="ts">
-	let connected:boolean = false;
+import { SharedIOClient } from "../lib";
 
-	let ws:WebSocket;
+	let client = new SharedIOClient({
+		host: "localhost",
+		port: 8080
+	});
 
-	let token:string|null = null;
+	let online = false;
 
-	function connect() {
-		ws = new WebSocket("ws://localhost:8080");
-
-		ws.onopen = () => {
-			console.log("Connection open");
-			connected = true;
-
-			ws.send(JSON.stringify({
-				action: "auth",
-				token
-			}));
-		}
-
-		ws.onclose = () => {
-			console.log("Connection lost");
-			connected = false;
-		}
-
-		ws.onmessage = ({ data }) => {
-			token = JSON.parse(data).token || null;
-		}
-	}
-
-	function disconnect() {
-		ws.close();
-	}
+	client.on("open", () => online = true);
+	client.on("close", () => online = false);
 </script>
 
 <main>
 	<h1>SharedIO Manual Test</h1>
-	<p>Current status: {connected ? "Connected" : "Disconnected"}</p>
-	{#if !connected}
-		<button on:click={connect}>Connect</button>
+	<p>Current status: {online ? "Connected" : "Disconnected"}</p>
+	{#if !online}
+		<button on:click={() => client.open()}>Connect</button>
 	{:else}
-		<button on:click={disconnect}>Disconnect</button>
+		<button on:click={() => client.close()}>Disconnect</button>
 	{/if}
 </main>
 
