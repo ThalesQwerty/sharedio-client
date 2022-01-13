@@ -57,6 +57,9 @@ export class SharedIOClient {
 
     private get tokenName() { return this.name ? `@sharedio_token_${this.name}` : `@sharedio_token` };
 
+    /**
+     * Gets the authentication token used by this client
+     */
     public get token() { return localStorage?.getItem(this.tokenName) ?? this._token };
     private set token(newToken) {
         localStorage?.setItem(this.tokenName, newToken);
@@ -64,11 +67,31 @@ export class SharedIOClient {
     }
     private _token:string;
 
+    /**
+     * Gets the pure WebSocket object wrapped by the SharedIOClient.
+     *
+     * Only mess directly with this if you absolutely know what you're doing.
+     */
     public get websocket() { return this._websocket };
     private _websocket:WebSocket;
 
+    /**
+     * Verifies if the client is currently connected
+     */
     public get online() { return this._online };
     private _online:boolean;
+
+    /**
+     * Returns the connection round trip time in milisseconds (between 0 and 999)
+     */
+    public get ping() { return this._ping };
+    private _ping:number = 0;
+
+    /**
+     * Returns the connection packet loss ratio (between 0 and 1)
+     */
+    public get packetLoss() { return this._packetLoss };
+    private _packetLoss:number = 0;
 
     private _listeners:{[name in SharedIOEvent]: (() => void)[]} = {
         open: [],
@@ -93,7 +116,7 @@ export class SharedIOClient {
     }
 
     /**
-     * Removes all event listeners
+     * Removes all current event listeners
      */
     public removeAllListeners(event?: SharedIOEvent) {
         if (event) this._listeners[event] = [];
@@ -102,6 +125,9 @@ export class SharedIOClient {
         }
     }
 
+    /**
+     * Disptach an event, calling its listeners following the order by which they were added
+     */
     private dispatch(event: SharedIOEvent): void {
         for (const listener of this._listeners[event]) {
             listener();
@@ -134,7 +160,18 @@ export class SharedIOClient {
             }
 
             ws.onmessage = ({ data }) => {
-                this.token = JSON.parse(data.toString()).token || null;
+                const parsed = JSON.parse(data.toString());
+
+                switch (parsed.action) {
+                    case "auth":
+                        this.token = parsed.token || null;
+                        break;
+                    case "ping":
+                        this._ping = parsed.roundTripTime;
+                        this._packetLoss = parsed.packetLossRatio;
+                        this.sendPong(parsed.packetId);
+                        break;
+                }
             }
         }
 
@@ -147,5 +184,12 @@ export class SharedIOClient {
     public close(): SharedIOClient {
         this._websocket?.close();
         return this;
+    }
+
+    private sendPong(packetId: string) {
+        this._websocket?.send(JSON.stringify({
+            action: "pong",
+            packetId
+        }));
     }
 }

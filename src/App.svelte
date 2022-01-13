@@ -10,6 +10,8 @@ import { SharedIOClient } from "../lib";
 
 	client.on("open", () => online = true);
 	client.on("close", () => online = false);
+
+	window['client'] = client;
 </script>
 
 <main>
