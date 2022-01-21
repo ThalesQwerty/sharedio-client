@@ -1,7 +1,7 @@
 import type { KeyValue } from ".";
 
 export interface Entity {
-    owner: string|null,
+    owned: boolean,
     id: string,
     state: KeyValue,
     actions: string[]
