@@ -1,7 +1,8 @@
 <script lang="ts">
-import { SharedIOClient } from "../lib";
+	import { SharedIOClient } from "../lib";
+	import type { TestSchema } from "./sharedio/schema";
 
-	let client = new SharedIOClient({
+	let client = new SharedIOClient<TestSchema>({
 		host: "localhost",
 		port: 8080
 	});
@@ -10,6 +11,7 @@ import { SharedIOClient } from "../lib";
 
 	client.on("open", () => online = true);
 	client.on("close", () => online = false);
+	client.on("update", ({view}) => console.log("view", view));
 
 	window['client'] = client;
 </script>

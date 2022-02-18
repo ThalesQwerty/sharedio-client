@@ -1,1 +1,1 @@
-export { SharedIOClient } from "./schema";
+export { SharedIOClient, type SharedIOSchema, type EntitySchema } from "./schema";
