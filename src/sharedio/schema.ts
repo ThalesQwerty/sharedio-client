@@ -10,7 +10,9 @@ export interface TestSchema extends SharedIOSchema {
             name: string,
             power: number,
             secret: string,
-            randomNumber: number,
+            readonly immutable: string,
+            readonly immutableSecret: string,
+            readonly randomNumber: number,
 
             shoot: () => void,
             shootPrivately: () => void,
@@ -20,9 +22,10 @@ export interface TestSchema extends SharedIOSchema {
             readonly id: `Entity_${string}`,
             readonly type: "Player",
 
-            name: string,
-            power: number,
-            randomNumber: number
+            readonly name: string,
+            readonly power: number,
+            readonly immutable: string,
+            readonly randomNumber: number
 
             shoot: () => void
         }[]
