@@ -22,7 +22,7 @@ export class SharedIOEntity {
     public readonly id: string;
 
     /**
-     * Do I own this entity?
+     * Does the user own this entity?
      */
     public readonly owned: boolean;
 
@@ -52,7 +52,6 @@ export class SharedIOEntity {
             const methodName = actions[methodIndex];
             SharedIOEntity._addMethod(this, methodName);
         }
-
     }
 
     private static _hasProperty(entity: SharedIOEntity, propertyName: string) {

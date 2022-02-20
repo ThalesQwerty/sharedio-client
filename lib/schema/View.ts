@@ -1,5 +1,5 @@
-import type { SharedIOClient, SharedIOSchema, EntityListSchema, SerializedEntity } from ".";
-import { SharedIOEntity } from ".";
+import type { SharedIOClient, SharedIOSchema, SerializedEntity } from ".";
+import { SharedIOEntity, EntityListSchema } from ".";
 import type { KeyValue, ViewResponse } from "../types";
 import * as _ from "lodash";
 
@@ -25,18 +25,12 @@ export class View<Schema extends SharedIOSchema = SharedIOSchema> {
         const schema: KeyValue<EntityListSchema, string> = {};
 
         for (const entity of this.entityArray) {
-            schema[entity.type] ??= {
-                mine: [],
-                theirs: []
-            };
-
-            if (entity.owned) schema[entity.type].mine.push(entity);
-            else schema[entity.type].theirs.push(entity);
+            schema[entity.type] ??= EntityListSchema.create();
+            schema[entity.type].push(entity);
         }
 
-        return schema as Schema;
+        return schema as any as Schema;
     }
-
 
     constructor(client: SharedIOClient, onUpdate: (newView: Schema) => void) {
         this._client = client;

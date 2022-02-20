@@ -1,33 +1,27 @@
-import type { SharedIOSchema, EntitySchema } from "../../lib";
+import type { SharedIOSchema, EntityListSchema } from "../../lib";
+interface Player {
+    readonly owned: boolean,
+    readonly id: `Entity_${string}`,
+    readonly type: "Player",
 
+    readonly name: string,
+    readonly power: number,
+    readonly immutable: string,
+    readonly randomNumber: number,
+
+    shoot: () => void,
+}
+
+interface MyPlayer extends Player {
+    owned: true,
+
+    name: string,
+    power: number,
+    secret: string,
+    readonly immutableSecret: string,
+
+    shootPrivately: () => void,
+}
 export interface TestSchema extends SharedIOSchema {
-    Player: {
-        mine: {
-            readonly owned: true,
-            readonly id: `Entity_${string}`,
-            readonly type: "Player",
-
-            name: string,
-            power: number,
-            secret: string,
-            readonly immutable: string,
-            readonly immutableSecret: string,
-            readonly randomNumber: number,
-
-            shoot: () => void,
-            shootPrivately: () => void,
-        }[],
-        theirs: {
-            readonly owned: false,
-            readonly id: `Entity_${string}`,
-            readonly type: "Player",
-
-            readonly name: string,
-            readonly power: number,
-            readonly immutable: string,
-            readonly randomNumber: number
-
-            shoot: () => void
-        }[]
-    }
+    Player: EntityListSchema<Player, MyPlayer>
 }

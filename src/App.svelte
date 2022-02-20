@@ -11,7 +11,18 @@
 
 	client.on("open", () => online = true);
 	client.on("close", () => online = false);
-	client.on("update", ({view}) => console.log("view", view));
+
+	client.on("update", ({view}) => {
+		const player = view.Player.last;
+
+		if (player.owned) {
+			player.shootPrivately();
+		} else {
+			player.shoot();
+		}
+
+		console.log("player", player);
+	});
 
 	window['client'] = client;
 </script>
