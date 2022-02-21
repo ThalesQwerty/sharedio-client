@@ -21,7 +21,7 @@
 			player.shoot();
 		}
 
-		console.log("player", player);
+		console.log("view", view);
 	});
 
 	window['client'] = client;

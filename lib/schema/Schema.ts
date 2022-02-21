@@ -21,7 +21,10 @@ export class EntityListSchema<Type extends EntitySchema = EntitySchema, PrivateA
     /**
      * Returns the latest created entity of this type that belongs to you
      *
-     * @returns`EntityType.owned[EntityType.owned.length - 1]`
+     * Equivalent to:
+     * ```ts
+     * EntityType.owned[EntityType.owned.length - 1]
+     * ```
      */
      get mine() {
         const owned = this.owned;

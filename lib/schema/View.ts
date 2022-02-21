@@ -45,17 +45,17 @@ export class View<Schema extends SharedIOSchema = SharedIOSchema> {
         const deleted = [];
 
         for (const id in this._entityJson) {
-            const serailizedEntity = this._entityJson[id];
+            const serializedEntity = this._entityJson[id];
 
-            if (!serailizedEntity.id) {
+            if (!serializedEntity.id) {
                 deleted.push(id);
                 delete this._entityMap[id];
             }
 
             if (created.indexOf(id) >= 0) {
-                this._entityMap[id] = new SharedIOEntity(this, serailizedEntity.type, id, serailizedEntity.state ?? {}, serailizedEntity.actions ?? []);
+                this._entityMap[id] = new SharedIOEntity(this, serializedEntity.type, id, serializedEntity.state ?? {}, serializedEntity.actions ?? [], serializedEntity.owned);
             } else {
-                SharedIOEntity.setState(this._entityMap[id], serailizedEntity.state);
+                SharedIOEntity.setState(this._entityMap[id], {...serializedEntity.state, owned: serializedEntity.owned});
             }
         }
 
