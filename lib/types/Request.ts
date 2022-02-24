@@ -1,7 +1,7 @@
 import type { KeyValue } from '.';
 
 export interface SharedIOBaseRequest {
-    action: "auth"|"pong"|"write";
+    action: "auth"|"pong"|"write"|"call";
 }
 
 export interface SharedIOBaseAction extends SharedIOBaseRequest {
@@ -23,4 +23,10 @@ export interface WriteRequest extends SharedIOBaseAction {
     props: KeyValue;
 }
 
-export type SharedIORequest = AuthRequest|PongRequest|WriteRequest;
+export interface CallRequest extends SharedIOBaseAction {
+    action: "call";
+    methodName: string,
+    params: unknown
+}
+
+export type SharedIORequest = AuthRequest|PongRequest|WriteRequest|CallRequest;

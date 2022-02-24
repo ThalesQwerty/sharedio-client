@@ -15,13 +15,27 @@
 	client.on("update", ({view}) => {
 		const player = view.Player.last;
 
-		if (player.owned) {
-			player.shootPrivately();
-		} else {
-			player.shoot();
+		// if (player.owned) {
+		// 	player.shootPrivately();
+		// } else {
+		// 	player.shoot();
+		// }
+
+		// console.log("my player", view.Player.mine);
+
+		window['testWrite'] = function() {
+			if (player && player.owned) {
+				player.name = "Ratinho";
+				player.power = 4;
+			}
 		}
 
-		console.log("view", view);
+		window['testCall'] = function() {
+			if (player && player.owned) {
+				player.shoot();
+				player.shootPrivately();
+			}
+		}
 	});
 
 	window['client'] = client;

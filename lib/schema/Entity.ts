@@ -1,6 +1,6 @@
 import type { KeyValue } from "../types";
 import type { WriteRequest } from "../types/Request";
-import type { View, EntityAttribute } from ".";
+import type { EntityAttribute, SharedIOClient } from ".";
 
 export interface SerializedEntity {
     type?: string,
@@ -24,23 +24,24 @@ export class SharedIOEntity {
     /**
      * Does the user own this entity?
      */
-    public readonly owned: boolean;
+    public get owned() { return this._owned };
+    private _owned: boolean;
 
     /**
      * The view where this entity is being rendered at.
      */
-    private readonly view: View;
+    private readonly client: SharedIOClient;
 
     /**
      * Lists the attributes and methods names for each entity type
      */
     private static _schema: KeyValue<{attributes: string[], methods: string[]}> = {};
 
-    constructor(view:View, type: string, id: string, state: KeyValue<EntityAttribute> = {}, actions: string[]|KeyValue<string, number> = [], owned: boolean = false) {
+    constructor(client:SharedIOClient, type: string, id: string, state: KeyValue<EntityAttribute> = {}, actions: string[]|KeyValue<string, number> = [], owned: boolean = false) {
         this.id = id;
-        this.owned = owned;
+        this._owned = owned;
         this.type = type;
-        this.view = view;
+        this.client = client;
 
         console.log("new entity", this);
 
@@ -52,6 +53,14 @@ export class SharedIOEntity {
             const methodName = actions[methodIndex];
             SharedIOEntity._addMethod(this, methodName);
         }
+    }
+
+    private static _fieldName(attributeName: string): `@${string}` {
+        return `@${attributeName}`;
+    }
+
+    private static _accessorName(attributeName: `@${string}`): string {
+        return attributeName.substring(1);
     }
 
     private static _hasProperty(entity: SharedIOEntity, propertyName: string) {
@@ -66,7 +75,25 @@ export class SharedIOEntity {
         if (!SharedIOEntity._hasProperty(entity, attributeName)) {
             SharedIOEntity._createSchema(entity);
             SharedIOEntity._schema[entity.type].attributes.push(attributeName);
-            entity[attributeName] = attributeValue;
+
+            const fieldName = this._fieldName(attributeName);
+            const accessorName = attributeName;
+
+            entity[fieldName] = attributeValue;
+
+            Object.defineProperty(entity, accessorName, {
+                get() {
+                    return entity[fieldName];
+                },
+                set(newValue) {
+                    console.log(`Changed ${accessorName} from "${entity[fieldName]}" to "${newValue}"`);
+                    entity[fieldName] = newValue;
+
+                    entity.client.action.write(entity, {
+                        [attributeName]: newValue
+                    });
+                }
+            })
         }
     }
 
@@ -74,8 +101,10 @@ export class SharedIOEntity {
         if (!SharedIOEntity._hasProperty(entity, methodName)) {
             SharedIOEntity._createSchema(entity);
             SharedIOEntity._schema[entity.type].methods.push(methodName);
-            entity[methodName] = () => {
+            entity[methodName] = (params?: unknown) => {
                 console.log(`Calling method ${methodName}...`)
+
+                entity.client.action.call(entity, methodName, params);
             }
         }
     }
@@ -96,19 +125,12 @@ export class SharedIOEntity {
     /**
      * Sets a new state for an entity
      */
-    public static setState(entity: SharedIOEntity, newState: KeyValue<EntityAttribute>): void {
-        const state:KeyValue<EntityAttribute> = {};
-
-        for (const attributeName in newState) {
-            state[attributeName] = entity[attributeName];
+    public static setState(entity: SharedIOEntity, newState: KeyValue<EntityAttribute>, owned?: boolean): void {
+        if (entity) {
+            if (owned != null) entity._owned = owned;
+            for (const attributeName in newState) {
+                entity[this._fieldName(attributeName)] = newState[attributeName];
+            }
         }
-    }
-
-    public save() {
-        this.view.client.send({
-            action: "write",
-            entityId: this.id,
-            props: {}
-        });
     }
 }

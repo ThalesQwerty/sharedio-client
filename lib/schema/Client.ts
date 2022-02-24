@@ -7,7 +7,7 @@ import type {
     Response,
     KeyValue,
 } from "../types";
-import { View } from "./View";
+import { View, Action } from ".";
 import type { SharedIOSchema } from ".";
 import { HasEvents } from "../utils/HasEvents";
 export class SharedIOClient<
@@ -100,7 +100,11 @@ export class SharedIOClient<
     }
     private _packetLoss: number = 0;
 
+    public get view() { return this._view };
     private _view: View<Schema>;
+
+    public get action() { return this._action };
+    private _action: Action;
 
     public get entities() {
         return this._view.entities;
@@ -117,6 +121,7 @@ export class SharedIOClient<
         this._view = new View<Schema>(this, (entities) => {
             this.emit("update", {view: entities});
         });
+        this._action = new Action(this);
     }
 
     /**

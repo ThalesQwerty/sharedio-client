@@ -41,25 +41,30 @@ export class View<Schema extends SharedIOSchema = SharedIOSchema> {
         if (changes.add) _.merge(this._entityJson, changes.add);
         if (changes.remove) this._entityJson = _.omit(this._entityJson, changes.remove);
 
-        const created = Object.keys(changes.add).filter(id => changes.add[id].id);
-        const deleted = [];
+        const createdEntitiesIds = Object.keys(changes.add).filter(entityId => changes.add[entityId].id);
+        const deletedEntitiesIds = [];
 
-        for (const id in this._entityJson) {
-            const serializedEntity = this._entityJson[id];
+        console.log(changes, this._entityJson);
+
+        for (const entityId in this._entityJson) {
+            const serializedEntity = this._entityJson[entityId];
 
             if (!serializedEntity.id) {
-                deleted.push(id);
-                delete this._entityMap[id];
-            }
-
-            if (created.indexOf(id) >= 0) {
-                this._entityMap[id] = new SharedIOEntity(this, serializedEntity.type, id, serializedEntity.state ?? {}, serializedEntity.actions ?? [], serializedEntity.owned);
+                // delete
+                deletedEntitiesIds.push(entityId);
+                delete this._entityMap[entityId];
+            } else if (createdEntitiesIds.indexOf(entityId) >= 0) {
+                // create
+                this._entityMap[entityId] = new SharedIOEntity(this.client, serializedEntity.type, entityId, serializedEntity.state ?? {}, serializedEntity.actions ?? [], serializedEntity.owned);
             } else {
-                SharedIOEntity.setState(this._entityMap[id], {...serializedEntity.state, owned: serializedEntity.owned});
+                // update
+                SharedIOEntity.setState(this._entityMap[entityId], {...serializedEntity.state}, serializedEntity.owned);
             }
         }
 
-        this._entityJson = _.omit(this._entityJson, deleted);
+        this._entityJson = _.omit(this._entityJson, deletedEntitiesIds);
+
+        console.log(this._entityJson);
 
         this._onUpdate(this.entities);
     }

@@ -9,7 +9,7 @@ export interface ListenerOverloads<
     /**
      * Adds an event listener
      */
-    (event: keyof EventNames, callback: Function): void;
+    (event: keyof EventNames, callback: Function): this;
 }
 
 /**
@@ -25,28 +25,29 @@ export interface EmitterOverloads<
     (event: keyof EventNames, props?: KeyValue): unknown;
 }
 
+export type EventListener<Events, Listeners, Object> = Listeners | ((event: keyof Events, callback: Function) => Object);
+export type EventEmitter<Events, Emitters> = Emitters | ((event: keyof Events, props?: KeyValue) => unknown);
+
 /**
  * Base class for all objects that have custom event listeners
  */
 export abstract class HasEvents<
-    Events extends object,
+    Events extends KeyValue,
     Listeners extends ListenerOverloads<Events>,
     Emitters extends EmitterOverloads<Events>,
 > {
     /**
      * List of event listeners for different types of events
      */
-    private _listeners: KeyValue<Function[], keyof Events> = {};
+    private _listeners: KeyValue<Function[], keyof Events> = {} as KeyValue<Function[], keyof Events>;
 
     /**
      * Adds an event listener
      */
-    public on:
-        | Listeners
-        | ((event: keyof Events, callback: Function) => void) = (
+    public on: EventListener<Events, Listeners, this> = (
         event: keyof Events,
         callback: Function,
-    ): void => {
+    ): this => {
         this._listeners[event] ??= [] as any;
 
         if (typeof this._listeners[event] === "function")
@@ -55,14 +56,14 @@ export abstract class HasEvents<
             ] as any[];
 
         this._listeners[event]?.push(callback);
+
+        return this;
     };
 
     /**
      * Emits an event, calling its listeners following the order by which they were added
      */
-    protected emit:
-        | Emitters
-        | ((event: keyof Events, props?: KeyValue) => void) = (
+    protected emit: EventEmitter<Events, Emitters> = (
         event: keyof Events,
         props?: KeyValue,
     ): unknown => {
@@ -84,4 +85,6 @@ export abstract class HasEvents<
                 this._listeners[name as keyof Events] = [] as any;
             }
     }
+
+    constructor() {}
 }
