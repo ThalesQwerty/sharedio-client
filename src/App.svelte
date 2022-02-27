@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { SharedIOClient } from "../lib";
-	import type { TestSchema } from "./sharedio/schema";
+	import type { Entities } from "./sharedio/newSchema";
 
-	let client = new SharedIOClient<TestSchema>({
+	let client = new SharedIOClient<Entities>({
 		host: "localhost",
 		port: 8080
 	});

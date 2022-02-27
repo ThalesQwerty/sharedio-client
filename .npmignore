@@ -2,3 +2,10 @@
 node_modules/
 public/
 src/
+.eslintrc
+.prettierrc
+rollup.config.js
+sharediotest.html
+svelte.d.ts
+tsconfig.json
+yarn.lock

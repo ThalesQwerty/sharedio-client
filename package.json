@@ -34,5 +34,10 @@
     "lodash": "^4.17.21",
     "sirv-cli": "^1.0.0",
     "ws": "^8.4.0"
-  }
+  },
+  "files": [
+    "lib/",
+    "index.ts",
+    "README.md"
+  ]
 }

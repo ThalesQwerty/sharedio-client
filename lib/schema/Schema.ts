@@ -10,14 +10,13 @@ interface EntityObjectAttribute {
 interface EntityArrayAttribute extends Array<EntityAttribute> {};
 
 export interface EntitySchema {
-    readonly owned: boolean;
-    readonly id: string;
     readonly type: string;
+    readonly id: string;
+    readonly owned: boolean;
+    readonly hosted: boolean;
+    readonly inside: boolean;
 }
-
-type NotOwned<EntityType extends EntitySchema = EntitySchema> = EntityType&{owned: false};
-type Owned<EntityType extends EntitySchema = EntitySchema, PrivateAttributes extends KeyValue = {}> = EntityType&{owned: true}&PrivateAttributes;
-export class EntityListSchema<Type extends EntitySchema = EntitySchema, PrivateAttributes extends KeyValue = {}> extends Array<Owned<Type, PrivateAttributes>|NotOwned<Type>> {
+export class EntityListSchema<EntitySubtypes extends EntitySchema = EntitySchema> extends Array<EntitySubtypes> {
     /**
      * Returns the latest created entity of this type that belongs to you
      *
@@ -35,14 +34,14 @@ export class EntityListSchema<Type extends EntitySchema = EntitySchema, PrivateA
      * Lists all entities of this type that belong to you
      */
     get owned() {
-        return this.filter(entity => entity.owned) as Owned<Type, PrivateAttributes>[];
+        return this.filter(entity => entity.owned);
     }
 
     /**
      * Lists all entities of this type that don't belong to you
      */
     get notOwned() {
-        return this.filter(entity => !entity.owned) as NotOwned<Type>[];
+        return this.filter(entity => !entity.owned);
     }
 
     /**
@@ -59,12 +58,12 @@ export class EntityListSchema<Type extends EntitySchema = EntitySchema, PrivateA
         return this[this.length - 1];
     }
 
-    private constructor(items?: Array<Owned<Type, PrivateAttributes>|NotOwned<Type>>) {
+    private constructor(items?: Array<EntitySubtypes>) {
         if (items) super(...items);
         else super();
     }
 
-    static create<Type extends EntitySchema = EntitySchema, PrivateAttributes extends KeyValue = {}>(): EntityListSchema<Owned<Type, PrivateAttributes>|NotOwned<Type>> {
+    static create<EntitySubtypes extends EntitySchema>(): EntityListSchema<EntitySubtypes> {
         return Object.create(EntityListSchema.prototype);
     }
 }

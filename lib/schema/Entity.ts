@@ -27,6 +27,18 @@ export class SharedIOEntity {
     public get owned() { return this._owned };
     private _owned: boolean;
 
+     /**
+     * Does the user host this entity?
+     */
+      public get hosted() { return this._hosted };
+      private _hosted: boolean;
+
+    /**
+     * Is the user inside this channel?
+     */
+    public get inside() { return this._inside };
+    private _inside: boolean;
+
     /**
      * The view where this entity is being rendered at.
      */
