@@ -1,6 +1,7 @@
 import type { KeyValue } from "../types";
 import type { WriteRequest } from "../types/Request";
 import type { EntityAttribute, SharedIOClient } from ".";
+import _ from "lodash";
 
 export interface SerializedEntity {
     type?: string,
@@ -137,11 +138,25 @@ export class SharedIOEntity {
     /**
      * Sets a new state for an entity
      */
-    public static setState(entity: SharedIOEntity, newState: KeyValue<EntityAttribute>, owned?: boolean): void {
+    public static setState(entity: SharedIOEntity, newState: KeyValue<EntityAttribute>, deletedAttributes?: string[], owned?: boolean): void {
         if (entity) {
             if (owned != null) entity._owned = owned;
             for (const attributeName in newState) {
                 entity[this._fieldName(attributeName)] = newState[attributeName];
+            }
+            for (const _deletedAttributeName of deletedAttributes) {
+                const deletedAttributeName = this._fieldName(_deletedAttributeName);
+                function removeAttribute(object: KeyValue, path: string) {
+                    const steps = path.split(".");
+                    const next = steps.shift();
+
+                    if (steps.length === 0) {
+                        delete object[next];
+                    } else {
+                        removeAttribute(object, steps.join("."));
+                    }
+                }
+                removeAttribute(entity, deletedAttributeName);
             }
         }
     }

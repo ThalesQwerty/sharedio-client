@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { SharedIOClient } from "../lib";
-	import type { Entities } from "./sharedio/newSchema2";
+	import type { Entities } from "./sharedio/accessorSchema";
 
 	let client = new SharedIOClient<Entities>({
 		host: "localhost",
@@ -13,27 +13,9 @@
 	client.on("close", () => online = false);
 
 	client.on("update", ({view}) => {
-		const player = view.Player.last;
-
-		// if (player.owned) {
-		// 	player.shootPrivately();
-		// } else {
-		// 	player.shoot();
-		// }
-
-		// console.log("my player", view.Player.mine);
-
 		window['testWrite'] = function() {
-			if (player && player.owned) {
-				player.name = "Ratinho";
-				player.power = 4;
-			}
-		}
-
-		window['testCall'] = function() {
-			if (player && player.owned) {
-				player.shoot();
-				player.shootPrivately();
+			if (view.GetSetTest.last && view.GetSetTest.last.owned) {
+				view.GetSetTest.last.watched = Math.random();
 			}
 		}
 	});

@@ -31,7 +31,6 @@ export class Action {
             clearTimeout(this.writeTimeout);
             this.writeTimeout = null;
 
-            console.log(this._writeQueue);
             for (const entityId in this._writeQueue) {
                 const request = this._writeQueue[entityId];
                 this.client.send(request);

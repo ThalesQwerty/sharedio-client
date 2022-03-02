@@ -44,8 +44,6 @@ export class View<Schema extends SharedIOSchema = SharedIOSchema> {
         const createdEntitiesIds = Object.keys(changes.add).filter(entityId => changes.add[entityId].id);
         const deletedEntitiesIds = [];
 
-        console.log(changes, this._entityJson);
-
         for (const entityId in this._entityJson) {
             const serializedEntity = this._entityJson[entityId];
 
@@ -58,13 +56,12 @@ export class View<Schema extends SharedIOSchema = SharedIOSchema> {
                 this._entityMap[entityId] = new SharedIOEntity(this.client, serializedEntity.type, entityId, serializedEntity.state ?? {}, serializedEntity.actions ?? [], serializedEntity.owned);
             } else {
                 // update
-                SharedIOEntity.setState(this._entityMap[entityId], {...serializedEntity.state}, serializedEntity.owned);
+                const deletedKeys = changes.remove.filter(key => new RegExp(`\^${entityId}.`).test(key)).map(key => key.substring(key.indexOf("state.") + 6));
+                SharedIOEntity.setState(this._entityMap[entityId], {...serializedEntity.state}, deletedKeys, serializedEntity.owned);
             }
         }
 
         this._entityJson = _.omit(this._entityJson, deletedEntitiesIds);
-
-        console.log(this._entityJson);
 
         this._onUpdate(this.entities);
     }
