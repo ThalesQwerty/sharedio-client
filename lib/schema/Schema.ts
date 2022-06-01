@@ -13,8 +13,6 @@ export interface EntitySchema {
     readonly type: string;
     readonly id: string;
     readonly owned: boolean;
-    readonly hosted: boolean;
-    readonly inside: boolean;
 }
 export class EntityListSchema<EntitySubtypes extends EntitySchema = EntitySchema> extends Array<EntitySubtypes> {
     /**

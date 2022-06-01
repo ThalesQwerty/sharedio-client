@@ -44,19 +44,19 @@ namespace Entity {
         readonly hosted: false;
         readonly inside: false;
     }
-    export interface inside<EntityType extends string>
+    export interface Inside<EntityType extends string>
         extends Base<EntityType> {
         readonly owned: false;
         readonly hosted: false;
         readonly inside: true;
     }
-    export interface HostInsider<EntityType extends string>
+    export interface HostInside<EntityType extends string>
         extends Base<EntityType> {
         readonly owned: false;
         readonly hosted: true;
         readonly inside: true;
     }
-    export interface OwnerInsider<EntityType extends string>
+    export interface OwnerInside<EntityType extends string>
         extends Base<EntityType> {
         readonly owned: true;
         readonly hosted: false;
@@ -68,7 +68,7 @@ namespace Entity {
         readonly hosted: true;
         readonly inside: false;
     }
-    export interface OwnerHostInsider<EntityType extends string>
+    export interface OwnerHostInside<EntityType extends string>
         extends Base<EntityType> {
         readonly owned: true;
         readonly hosted: true;
@@ -81,10 +81,13 @@ export namespace Player {
         readonly ally: false;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
         readonly damage: () => void;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
     }
 
@@ -92,11 +95,14 @@ export namespace Player {
         readonly ally: false;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
         readonly damage: () => void;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
         kick: () => void;
     }
@@ -105,82 +111,99 @@ export namespace Player {
         readonly ally: false;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly shoot: () => void;
-        readonly shootPrivately: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        shoot: () => void;
+        shootPrivately: () => void;
+        myUserId: any;
+        randomNumber: any;
     }
 
-    export interface inside extends Entity.inside<"Player"> {
+    export interface Inside extends Entity.Inside<"Player"> {
         readonly ally: false;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
         readonly damage: () => void;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
     }
 
-    export interface HostInsider
-        extends Entity.HostInsider<"Player"> {
+    export interface HostInside extends Entity.HostInside<"Player"> {
         readonly ally: false;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
         readonly damage: () => void;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
         kick: () => void;
     }
 
-    export interface OwnerInsider
-        extends Entity.OwnerInsider<"Player"> {
+    export interface OwnerInside
+        extends Entity.OwnerInside<"Player"> {
         readonly ally: false;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly shoot: () => void;
-        readonly shootPrivately: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        shoot: () => void;
+        shootPrivately: () => void;
+        myUserId: any;
+        randomNumber: any;
     }
 
     export interface OwnerHost extends Entity.OwnerHost<"Player"> {
         readonly ally: false;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly shoot: () => void;
-        readonly shootPrivately: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        shoot: () => void;
+        shootPrivately: () => void;
+        myUserId: any;
+        randomNumber: any;
         kick: () => void;
     }
 
-    export interface OwnerHostInsider
-        extends Entity.OwnerHostInsider<"Player"> {
+    export interface OwnerHostInside
+        extends Entity.OwnerHostInside<"Player"> {
         readonly ally: false;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly shoot: () => void;
-        readonly shootPrivately: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        shoot: () => void;
+        shootPrivately: () => void;
+        myUserId: any;
+        randomNumber: any;
         kick: () => void;
     }
 
@@ -188,10 +211,13 @@ export namespace Player {
         readonly ally: true;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
     }
 
@@ -199,10 +225,13 @@ export namespace Player {
         readonly ally: true;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
         kick: () => void;
     }
@@ -211,53 +240,65 @@ export namespace Player {
         readonly ally: true;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly shoot: () => void;
-        readonly shootPrivately: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        shoot: () => void;
+        shootPrivately: () => void;
+        myUserId: any;
+        randomNumber: any;
     }
 
-    export interface insideAlly extends Entity.inside<"Player"> {
+    export interface InsideAlly extends Entity.Inside<"Player"> {
         readonly ally: true;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
     }
 
-    export interface HostInsiderAlly
-        extends Entity.HostInsider<"Player"> {
+    export interface HostInsideAlly
+        extends Entity.HostInside<"Player"> {
         readonly ally: true;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
         kick: () => void;
     }
 
-    export interface OwnerInsiderAlly
-        extends Entity.OwnerInsider<"Player"> {
+    export interface OwnerInsideAlly
+        extends Entity.OwnerInside<"Player"> {
         readonly ally: true;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly shoot: () => void;
-        readonly shootPrivately: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        shoot: () => void;
+        shootPrivately: () => void;
+        myUserId: any;
+        randomNumber: any;
     }
 
     export interface OwnerHostAlly
@@ -265,30 +306,36 @@ export namespace Player {
         readonly ally: true;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly shoot: () => void;
-        readonly shootPrivately: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        shoot: () => void;
+        shootPrivately: () => void;
+        myUserId: any;
+        randomNumber: any;
         kick: () => void;
     }
 
-    export interface OwnerHostInsiderAlly
-        extends Entity.OwnerHostInsider<"Player"> {
+    export interface OwnerHostInsideAlly
+        extends Entity.OwnerHostInside<"Player"> {
         readonly ally: true;
         readonly dead: false;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly shoot: () => void;
-        readonly shootPrivately: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        shoot: () => void;
+        shootPrivately: () => void;
+        myUserId: any;
+        randomNumber: any;
         kick: () => void;
     }
 
@@ -296,10 +343,13 @@ export namespace Player {
         readonly ally: false;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
         readonly damage: () => void;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
     }
 
@@ -307,11 +357,14 @@ export namespace Player {
         readonly ally: false;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
         readonly damage: () => void;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
         kick: () => void;
     }
@@ -320,50 +373,62 @@ export namespace Player {
         readonly ally: false;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly shoot: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        shoot: () => void;
+        myUserId: any;
+        randomNumber: any;
     }
 
-    export interface insideDead extends Entity.inside<"Player"> {
+    export interface InsideDead extends Entity.Inside<"Player"> {
         readonly ally: false;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
         readonly damage: () => void;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
     }
 
-    export interface HostInsiderDead
-        extends Entity.HostInsider<"Player"> {
+    export interface HostInsideDead
+        extends Entity.HostInside<"Player"> {
         readonly ally: false;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
         readonly damage: () => void;
         readonly shoot: () => void;
+        readonly myUserId: any;
         readonly randomNumber: any;
         kick: () => void;
     }
 
-    export interface OwnerInsiderDead
-        extends Entity.OwnerInsider<"Player"> {
+    export interface OwnerInsideDead
+        extends Entity.OwnerInside<"Player"> {
         readonly ally: false;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly shoot: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        shoot: () => void;
+        myUserId: any;
+        randomNumber: any;
     }
 
     export interface OwnerHostDead
@@ -371,28 +436,34 @@ export namespace Player {
         readonly ally: false;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly shoot: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        shoot: () => void;
+        myUserId: any;
+        randomNumber: any;
         kick: () => void;
     }
 
-    export interface OwnerHostInsiderDead
-        extends Entity.OwnerHostInsider<"Player"> {
+    export interface OwnerHostInsideDead
+        extends Entity.OwnerHostInside<"Player"> {
         readonly ally: false;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly shoot: () => void;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        shoot: () => void;
+        myUserId: any;
+        randomNumber: any;
         kick: () => void;
     }
 
@@ -400,9 +471,12 @@ export namespace Player {
         readonly ally: true;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
+        readonly myUserId: any;
         readonly randomNumber: any;
     }
 
@@ -410,9 +484,12 @@ export namespace Player {
         readonly ally: true;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
+        readonly myUserId: any;
         readonly randomNumber: any;
         kick: () => void;
     }
@@ -421,47 +498,59 @@ export namespace Player {
         readonly ally: true;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        myUserId: any;
+        randomNumber: any;
     }
 
-    export interface insideAllyDead extends Entity.inside<"Player"> {
+    export interface InsideAllyDead extends Entity.Inside<"Player"> {
         readonly ally: true;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
+        readonly myUserId: any;
         readonly randomNumber: any;
     }
 
-    export interface HostInsiderAllyDead
-        extends Entity.HostInsider<"Player"> {
+    export interface HostInsideAllyDead
+        extends Entity.HostInside<"Player"> {
         readonly ally: true;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly health: any;
+        readonly name: string;
+        readonly power: number;
+        superPublic: string;
+        readonly immutable: string;
+        readonly health: number;
+        readonly myUserId: any;
         readonly randomNumber: any;
         kick: () => void;
     }
 
-    export interface OwnerInsiderAllyDead
-        extends Entity.OwnerInsider<"Player"> {
+    export interface OwnerInsideAllyDead
+        extends Entity.OwnerInside<"Player"> {
         readonly ally: true;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        myUserId: any;
+        randomNumber: any;
     }
 
     export interface OwnerHostAllyDead
@@ -469,26 +558,32 @@ export namespace Player {
         readonly ally: true;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        myUserId: any;
+        randomNumber: any;
         kick: () => void;
     }
 
-    export interface OwnerHostInsiderAllyDead
-        extends Entity.OwnerHostInsider<"Player"> {
+    export interface OwnerHostInsideAllyDead
+        extends Entity.OwnerHostInside<"Player"> {
         readonly ally: true;
         readonly dead: true;
 
-        readonly name: any;
-        readonly power: any;
-        readonly secret: any;
-        readonly immutableSecret: any;
-        readonly health: any;
-        readonly randomNumber: any;
+        name: string;
+        power: number;
+        superPublic: string;
+        secret: string;
+        readonly immutable: string;
+        readonly immutableSecret: string;
+        health: number;
+        myUserId: any;
+        randomNumber: any;
         kick: () => void;
     }
 
@@ -496,35 +591,35 @@ export namespace Player {
         | Default
         | Host
         | Owner
-        | inside
-        | HostInsider
-        | OwnerInsider
+        | Inside
+        | HostInside
+        | OwnerInside
         | OwnerHost
-        | OwnerHostInsider
+        | OwnerHostInside
         | Ally
         | HostAlly
         | OwnerAlly
-        | insideAlly
-        | HostInsiderAlly
-        | OwnerInsiderAlly
+        | InsideAlly
+        | HostInsideAlly
+        | OwnerInsideAlly
         | OwnerHostAlly
-        | OwnerHostInsiderAlly
+        | OwnerHostInsideAlly
         | Dead
         | HostDead
         | OwnerDead
-        | insideDead
-        | HostInsiderDead
-        | OwnerInsiderDead
+        | InsideDead
+        | HostInsideDead
+        | OwnerInsideDead
         | OwnerHostDead
-        | OwnerHostInsiderDead
+        | OwnerHostInsideDead
         | AllyDead
         | HostAllyDead
         | OwnerAllyDead
-        | insideAllyDead
-        | HostInsiderAllyDead
-        | OwnerInsiderAllyDead
+        | InsideAllyDead
+        | HostInsideAllyDead
+        | OwnerInsideAllyDead
         | OwnerHostAllyDead
-        | OwnerHostInsiderAllyDead;
+        | OwnerHostInsideAllyDead;
 }
 
 export interface Entities extends SharedIOSchema {

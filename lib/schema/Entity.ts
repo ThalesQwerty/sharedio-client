@@ -140,7 +140,7 @@ export class SharedIOEntity {
      */
     public static setState(entity: SharedIOEntity, newState: KeyValue<EntityAttribute>, deletedAttributes?: string[], owned?: boolean): void {
         if (entity) {
-            if (owned != null) entity._owned = owned;
+        if (owned != null) entity._owned = owned;
             for (const attributeName in newState) {
                 entity[this._fieldName(attributeName)] = newState[attributeName];
             }

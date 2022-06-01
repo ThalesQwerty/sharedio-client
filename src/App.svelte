@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { SharedIOClient } from "../lib";
-	import type { Entities } from "./sharedio/accessorSchema";
+	import type Entities from "./sharedio/refactoredSchema";
 
 	let client = new SharedIOClient<Entities>({
 		host: "localhost",
@@ -12,13 +12,21 @@
 	client.on("open", () => online = true);
 	client.on("close", () => online = false);
 
-	client.on("update", ({view}) => {
-		window['testWrite'] = function() {
-			if (view.GetSetTest.last && view.GetSetTest.last.owned) {
-				view.GetSetTest.last.watched = Math.random();
-			}
+	window['testWrite'] = function() {
+		const test = client.view.entities.TestEntity.last;
+		if (test && test.owned) {
+			test.name = "oxe";
 		}
-	});
+	}
+
+	// client.on("update", ({view}) => {
+	// 	window['testWrite'] = function() {
+	// 		const test = view.TestEntity.last;
+	// 		if (test && test.owned) {
+	// 			test.name = "oxe";
+	// 		}
+	// 	}
+	// });
 
 	window['client'] = client;
 </script>

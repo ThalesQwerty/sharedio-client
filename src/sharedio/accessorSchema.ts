@@ -44,19 +44,19 @@ namespace Entity {
         readonly hosted: false;
         readonly inside: false;
     }
-    export interface inside<EntityType extends string>
+    export interface Inside<EntityType extends string>
         extends Base<EntityType> {
         readonly owned: false;
         readonly hosted: false;
         readonly inside: true;
     }
-    export interface HostInsider<EntityType extends string>
+    export interface HostInside<EntityType extends string>
         extends Base<EntityType> {
         readonly owned: false;
         readonly hosted: true;
         readonly inside: true;
     }
-    export interface OwnerInsider<EntityType extends string>
+    export interface OwnerInside<EntityType extends string>
         extends Base<EntityType> {
         readonly owned: true;
         readonly hosted: false;
@@ -68,7 +68,7 @@ namespace Entity {
         readonly hosted: true;
         readonly inside: false;
     }
-    export interface OwnerHostInsider<EntityType extends string>
+    export interface OwnerHostInside<EntityType extends string>
         extends Base<EntityType> {
         readonly owned: true;
         readonly hosted: true;
@@ -78,50 +78,82 @@ namespace Entity {
 
 export namespace GetSetTest {
     export interface Default extends Entity.Default<"GetSetTest"> {
-        readonly watched: any;
+        watched: any;
+        readonly number: number;
+        readonly string: string;
+        readonly boolean: boolean;
+        random: () => void;
     }
 
     export interface Host extends Entity.Host<"GetSetTest"> {
-        readonly watched: any;
+        watched: any;
+        readonly number: number;
+        readonly string: string;
+        readonly boolean: boolean;
+        random: () => void;
     }
 
     export interface Owner extends Entity.Owner<"GetSetTest"> {
         watched: any;
+        number: number;
+        string: string;
+        boolean: boolean;
+        random: () => void;
     }
 
-    export interface inside extends Entity.inside<"GetSetTest"> {
-        readonly watched: any;
-    }
-
-    export interface HostInsider
-        extends Entity.HostInsider<"GetSetTest"> {
-        readonly watched: any;
-    }
-
-    export interface OwnerInsider
-        extends Entity.OwnerInsider<"GetSetTest"> {
+    export interface Inside extends Entity.Inside<"GetSetTest"> {
         watched: any;
+        readonly number: number;
+        readonly string: string;
+        readonly boolean: boolean;
+        random: () => void;
+    }
+
+    export interface HostInside
+        extends Entity.HostInside<"GetSetTest"> {
+        watched: any;
+        readonly number: number;
+        readonly string: string;
+        readonly boolean: boolean;
+        random: () => void;
+    }
+
+    export interface OwnerInside
+        extends Entity.OwnerInside<"GetSetTest"> {
+        watched: any;
+        number: number;
+        string: string;
+        boolean: boolean;
+        random: () => void;
     }
 
     export interface OwnerHost
         extends Entity.OwnerHost<"GetSetTest"> {
         watched: any;
+        number: number;
+        string: string;
+        boolean: boolean;
+        random: () => void;
     }
 
-    export interface OwnerHostInsider
-        extends Entity.OwnerHostInsider<"GetSetTest"> {
+    export interface OwnerHostInside
+        extends Entity.OwnerHostInside<"GetSetTest"> {
         watched: any;
+        number: number;
+        string: string;
+        boolean: boolean;
+        random: () => void;
     }
 
     export type Variants =
         | Default
         | Host
         | Owner
-        | inside
-        | HostInsider
-        | OwnerInsider
+        | Inside
+        | HostInside
+        | OwnerInside
         | OwnerHost
-        | OwnerHostInsider;
+        | OwnerHostInside;
 }
 
 export interface Entities extends SharedIOSchema {
