@@ -1,5 +1,3 @@
-import type { KeyValue } from '../types';
-
 export type EntityAttribute = string | number | boolean | null | undefined | EntityObjectAttribute | EntityArrayAttribute;
 export type EntityMethod = (...params: any[]) => void;
 

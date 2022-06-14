@@ -1,5 +1,4 @@
 import type { KeyValue } from "../types";
-import type { WriteRequest } from "../types/Request";
 import type { EntityAttribute, SharedIOClient } from ".";
 import _ from "lodash";
 
@@ -114,7 +113,7 @@ export class SharedIOEntity {
         if (!SharedIOEntity._hasProperty(entity, methodName)) {
             SharedIOEntity._createSchema(entity);
             SharedIOEntity._schema[entity.type].methods.push(methodName);
-            entity[methodName] = (params?: unknown) => {
+            entity[methodName] = (params?: unknown[]) => {
                 console.log(`Calling method ${methodName}...`)
 
                 entity.client.action.call(entity, methodName, params);

@@ -1,14 +1,14 @@
 import type { SharedIOClient, SharedIOEntity } from ".";
-import type { KeyValue, WriteRequest } from "../types";
+import type { KeyValue, WriteInput } from "../types";
 
 export class Action {
-    private writeTimeout: number|null = null;
+    private writeTimeout: NodeJS.Immediate|null = null;
 
     public get client() { return this._client };
     private _client: SharedIOClient;
 
     public get writeQueue() { return this._writeQueue };
-    private _writeQueue: KeyValue<WriteRequest> = {};
+    private _writeQueue: KeyValue<Omit<WriteInput, "id">> = {};
 
     constructor(client: SharedIOClient) {
         this._client = client;
@@ -19,16 +19,18 @@ export class Action {
      */
     public write(entity: SharedIOEntity, props: KeyValue) {
         this._writeQueue[entity.id] = {
-            action: "write",
-            entityId: entity.id,
-            props: {
-                ...(this._writeQueue[entity.id]?.props),
-                ...props
+            type: "write",
+            data: {
+                entityId: entity.id,
+                properties: {
+                    ...(this._writeQueue[entity.id]?.data?.properties),
+                    ...props
+                }
             }
         };
 
-        if (!this.writeTimeout) this.writeTimeout = setTimeout(() => {
-            clearTimeout(this.writeTimeout);
+        if (!this.writeTimeout) this.writeTimeout = setImmediate(() => {
+            clearImmediate(this.writeTimeout);
             this.writeTimeout = null;
 
             for (const entityId in this._writeQueue) {
@@ -37,18 +39,20 @@ export class Action {
             }
 
             this._writeQueue = {};
-        }, 0);
+        });
     }
 
     /**
      * Calls a method from an entity
      */
-    public call(entity: SharedIOEntity, methodName: string, params?: KeyValue) {
+    public call(entity: SharedIOEntity, methodName: string, parameters: unknown[] = []) {
         this.client.send({
-            action: "call",
-            entityId: entity.id,
-            methodName,
-            params
+            type: "call",
+            data: {
+                entityId: entity.id,
+                methodName,
+                parameters
+            }
         });
     }
 }

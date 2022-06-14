@@ -3,6 +3,6 @@
   "include": ["src/**/*", "lib/**/*"],
   "exclude": ["node_modules/*", "__sapper__/*", "public/*"],
   "compilerOptions": {
-    "types": ["svelte"]
+    "types": ["svelte", "node"]
   }
 }

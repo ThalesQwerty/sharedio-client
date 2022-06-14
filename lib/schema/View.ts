@@ -1,6 +1,6 @@
 import type { SharedIOClient, SharedIOSchema, SerializedEntity } from ".";
 import { SharedIOEntity, EntityListSchema } from ".";
-import type { KeyValue, ViewResponse } from "../types";
+import type { KeyValue, ViewOutput } from "../types";
 import * as _ from "lodash";
 
 export class View<Schema extends SharedIOSchema = SharedIOSchema> {
@@ -37,11 +37,11 @@ export class View<Schema extends SharedIOSchema = SharedIOSchema> {
         this._onUpdate = onUpdate;
     }
 
-    public update(changes: ViewResponse) {
-        if (changes.add) _.merge(this._entityJson, changes.add);
-        if (changes.remove) this._entityJson = _.omit(this._entityJson, changes.remove);
+    public update(changes: ViewOutput) {
+        if (changes.data.add) _.merge(this._entityJson, changes.data.add);
+        if (changes.data.remove) this._entityJson = _.omit(this._entityJson, changes.data.remove);
 
-        const createdEntitiesIds = Object.keys(changes.add).filter(entityId => changes.add[entityId].id);
+        const createdEntitiesIds = Object.keys(changes.data.add).filter(entityId => changes.data.add[entityId].id);
         const deletedEntitiesIds = [];
 
         for (const entityId in this._entityJson) {
@@ -56,7 +56,7 @@ export class View<Schema extends SharedIOSchema = SharedIOSchema> {
                 this._entityMap[entityId] = new SharedIOEntity(this.client, serializedEntity.type, entityId, serializedEntity.state ?? {}, serializedEntity.actions ?? [], serializedEntity.owned);
             } else {
                 // update
-                const deletedKeys = changes.remove.filter(key => new RegExp(`\^${entityId}.`).test(key)).map(key => key.substring(key.indexOf("state.") + 6));
+                const deletedKeys = changes.data.remove.filter(key => new RegExp(`\^${entityId}.`).test(key)).map(key => key.substring(key.indexOf("state.") + 6));
                 SharedIOEntity.setState(this._entityMap[entityId], {...serializedEntity.state}, deletedKeys, serializedEntity.owned);
             }
         }

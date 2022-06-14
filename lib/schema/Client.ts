@@ -2,14 +2,15 @@ import type {
     SharedIOEvents,
     SharedIOEventListenerOverloads,
     SharedIOEventEmitterOverloads,
-    SharedIORequest,
     SharedIOConfig,
-    Response,
+    Input,
+    Output,
     KeyValue,
 } from "../types";
 import { View, Action } from ".";
 import type { SharedIOSchema } from ".";
 import { HasEvents } from "../utils/HasEvents";
+import { RandomHex } from "../utils";
 export class SharedIOClient<
     Schema extends SharedIOSchema = SharedIOSchema,
 > extends HasEvents<
@@ -142,8 +143,10 @@ export class SharedIOClient<
                 this.emit("open");
 
                 this.send({
-                    action: "auth",
-                    token: this.token,
+                    type: "auth",
+                    data: {
+                        token: this.token,
+                    }
                 });
             };
 
@@ -153,21 +156,21 @@ export class SharedIOClient<
             };
 
             ws.onmessage = ({ data }) => {
-                const message = JSON.parse(
+                const output = JSON.parse(
                     data.toString(),
-                ) as Response;
+                ) as Output;
 
-                switch (message.action) {
+                switch (output.type) {
                     case "auth":
-                        this.token = message.token || null;
+                        this.token = output.data.token || null;
                         break;
                     case "ping":
-                        this._ping = message.roundTripTime;
-                        this._packetLoss = message.packetLossRatio;
-                        this.sendPong(message.packetId);
+                        this._ping = output.data.roundTripTime;
+                        this._packetLoss = output.data.packetLossRatio;
+                        this.sendPong(output.data.packetId);
                         break;
                     case "view":
-                        this._view.update(message);
+                        this._view.update(output);
                         break;
                 }
             };
@@ -200,8 +203,11 @@ export class SharedIOClient<
      * Sends a message to the server
      * @param message Message to be sent
      */
-    public send(message: SharedIORequest) {
-        this.sendRaw(message);
+    public send(input: Omit<Input, "id">) {
+        this.sendRaw({
+            id: RandomHex(16),
+            ...input
+        });
     }
 
     /**
@@ -209,8 +215,10 @@ export class SharedIOClient<
      */
     private sendPong(packetId: string) {
         this.send({
-            action: "pong",
-            packetId,
+            type: "pong",
+            data: {
+                packetId
+            }
         });
     }
 }
