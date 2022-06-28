@@ -12,12 +12,25 @@
 	client.on("open", () => online = true);
 	client.on("close", () => online = false);
 
-	window['testWrite'] = function() {
-		const test = client.view.entities.TestEntity.last;
-		if (test && test.owned) {
-			test.name = "oxe";
-		}
+	window["testWrite"] = function(entityId) {
+		console.log("entityId", window["entityId"]);
+		client.send({
+			type: "write",
+			data: {
+				entityId,
+				properties: {
+					string: "uepa!!!"
+				}
+			}
+		});
 	}
+
+	// window['testWrite'] = function() {
+	// 	const test = client.view.entities.TestEntity.last;
+	// 	if (test && test.owned) {
+	// 		test.name = "oxe";
+	// 	}
+	// }
 
 	// client.on("update", ({view}) => {
 	// 	window['testWrite'] = function() {

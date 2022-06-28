@@ -59,10 +59,10 @@ export class SharedIOClient<
      * Gets the authentication token used by this client
      */
     public get token() {
-        return localStorage?.getItem(this.tokenName) ?? this._token;
+        return this._token; //localStorage?.getItem(this.tokenName) ?? this._token;
     }
     private set token(newToken) {
-        localStorage?.setItem(this.tokenName, newToken);
+        // localStorage?.setItem(this.tokenName, newToken);
         this._token = newToken;
     }
     private _token: string;
@@ -170,7 +170,8 @@ export class SharedIOClient<
                         this.sendPong(output.data.packetId);
                         break;
                     case "view":
-                        this._view.update(output);
+                        console.log("view", output);
+                        // this._view.update(output);
                         break;
                 }
             };
