@@ -13,7 +13,6 @@
 	client.on("close", () => online = false);
 
 	window["testWrite"] = function(entityId) {
-		console.log("entityId", window["entityId"]);
 		client.send({
 			type: "write",
 			data: {
@@ -21,6 +20,19 @@
 				properties: {
 					string: "uepa!!!"
 				}
+			}
+		});
+	}
+
+	window["testCall"] = function(entityId) {
+		client.send({
+			type: "call",
+			data: {
+				entityId,
+				methodName: "method",
+				parameters: [
+					"FUNFOU!"
+				]
 			}
 		});
 	}
