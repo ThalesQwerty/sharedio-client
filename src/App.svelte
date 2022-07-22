@@ -12,11 +12,12 @@
 	client.on("open", () => online = true);
 	client.on("close", () => online = false);
 
-	window["testWrite"] = function(entityId) {
+	window["testWrite"] = function(entity: string) {
 		client.send({
 			type: "write",
+			channel: window["channelId"].toString(),
 			data: {
-				entityId,
+				entity,
 				properties: {
 					string: "uepa!!!"
 				}
@@ -24,11 +25,12 @@
 		});
 	}
 
-	window["testCall"] = function(entityId) {
+	window["testCall"] = function(entity: string) {
 		client.send({
 			type: "call",
+			channel: window["channelId"].toString(),
 			data: {
-				entityId,
+				entity,
 				methodName: "method",
 				parameters: [
 					"FUNFOU!"

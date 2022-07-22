@@ -20,8 +20,9 @@ export class Action {
     public write(entity: SharedIOEntity, props: KeyValue) {
         this._writeQueue[entity.id] = {
             type: "write",
+            channel: window["testChannel"].toString(),
             data: {
-                entityId: entity.id,
+                entity: entity.id,
                 properties: {
                     ...(this._writeQueue[entity.id]?.data?.properties),
                     ...props
@@ -48,8 +49,9 @@ export class Action {
     public call(entity: SharedIOEntity, methodName: string, parameters: unknown[] = []) {
         this.client.send({
             type: "call",
+            channel: window["testChannel"].toString(),
             data: {
-                entityId: entity.id,
+                entity: entity.id,
                 methodName,
                 parameters
             }

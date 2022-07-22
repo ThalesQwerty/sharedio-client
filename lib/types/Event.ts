@@ -1,5 +1,4 @@
 import type { ListenerOverloads, EmitterOverloads } from "../utils";
-import type { KeyValue, PingResponse } from ".";
 import type { SharedIOSchema } from "../schema";
 
 interface SharedIOEvent {}

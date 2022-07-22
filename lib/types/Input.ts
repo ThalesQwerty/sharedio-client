@@ -2,12 +2,14 @@ import type { KeyValue } from "./KeyValue";
 
 interface SharedIOBaseInput {
     type: "auth"|"pong"|"write"|"call";
+    channel?: string;
     id: string;
     data: KeyValue
 }
 
 export interface AuthInput extends SharedIOBaseInput {
     type: "auth";
+    channel?: undefined;
     data: {
         token: string | null;
     }
@@ -15,6 +17,7 @@ export interface AuthInput extends SharedIOBaseInput {
 
 export interface PongInput extends SharedIOBaseInput {
     type: "pong";
+    channel?: undefined;
     data: {
         packetId: string;
     }
@@ -22,16 +25,18 @@ export interface PongInput extends SharedIOBaseInput {
 
 export interface WriteInput extends SharedIOBaseInput {
     type: "write";
+    channel: string;
     data: {
-        entityId: string;
+        entity: string;
         properties: KeyValue;
     }
 }
 
 export interface CallInput extends SharedIOBaseInput {
     type: "call";
+    channel: string;
     data: {
-        entityId: string;
+        entity: string;
         methodName: string;
         parameters: unknown[];
     }
